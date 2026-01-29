@@ -1,1 +1,317 @@
+Spring Boot Annotations
 
+Annotations in Spring Boot are used to simplify configuration and define behavior. Here are the key annotations: // code ky krna chahta h irrespective of code agar error ho
+
+Core Annotations
+
+@SpringBootApplication
+Combines three annotations: @Configuration, @EnableAutoConfiguration, and @ComponentScan.
+
+Marks the main class of your Spring Boot application.
+
+Example:
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+
+
+@ComponentScan // required package knsa h
+Scans for components (classes annotated with @Component, @Service, @Repository, etc.) in the specified package(s).
+
+Automatically included in @SpringBootApplication.
+
+@EnableAutoConfiguration
+Enables Spring Boot’s auto-configuration feature, which automatically configures beans based on the dependencies in your project.
+
+
+
+@Configuration
+Indicates that the class contains Spring bean definitions.
+
+Example:
+@Configuration
+public class AppConfig {
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+
+Bean & Dependency Injection Annotations
+
+
+@Component
+Marks a class as a Spring-managed component (bean).
+
+Example:
+@Component
+public class MyComponent {
+    public void doSomething() {
+        System.out.println("Doing something...");
+    }
+}
+
+@Service
+Specialized version of @Component for service-layer classes.
+
+
+
+@Repository
+Specialized version of @Component for data-access-layer classes.
+
+
+
+@Controller
+Specialized version of @Component for web controllers.
+
+
+
+@RestController
+Combination of @Controller and @ResponseBody. Used for RESTful web services.
+
+Example:
+@RestController
+public class MyController {
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "Hello, World!";
+    }
+}
+
+
+
+
+@Autowired
+Injects a dependency automatically.
+
+Example:
+@Service
+public class MyService {
+    public String getMessage() {
+        return "Hello!";
+    }
+}
+
+@RestController
+public class MyController {
+    @Autowired
+    private MyService myService;
+
+    @GetMapping("/message")
+    public String getMessage() {
+        return myService.getMessage();
+    }
+}
+
+
+@Value
+Injects values from properties files or environment variables.
+
+Example:
+@Value("${app.name}")
+private String appName;
+
+
+@PropertySource
+Loads properties from a specified file.
+
+Example:
+@Configuration
+@PropertySource("classpath:application.properties")
+public class AppConfig { }
+
+
+@ConfigurationProperties
+Binds properties to a Java object.
+
+Example:
+@ConfigurationProperties(prefix = "app")
+public class AppProperties {
+    private String name;
+    private String version;
+
+    // getters and setters
+}
+
+
+2. Configuration in Spring Boot
+
+Spring Boot simplifies configuration by providing defaults and allowing customization through properties files or Java-based configuration.
+
+
+application.properties / application.yml
+
+
+Spring Boot uses application.properties or application.yml for configuration.
+
+Common properties:
+server.port=8081
+spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+spring.datasource.username=root
+spring.datasource.password=password
+
+
+
+Java-Based Configuration
+
+
+You can define beans and configurations programmatically using @Configuration.
+
+Example:
+@Configuration
+public class MyConfig {
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+
+
+
+Environment Variables
+
+
+Spring Boot can read environment variables for configuration.
+
+Example:
+spring.datasource.url=${DB_URL}
+
+
+
+
+3. Profiles in Spring Boot
+
+Profiles allow you to define different configurations for different environments (e.g., development, testing, production).
+
+
+Defining Profiles
+
+
+In application.properties or application.yml:
+
+
+
+Default configuration:
+spring.profiles.active=dev
+
+
+Profile-specific configuration:
+
+application-dev.properties:
+server.port=8081
+
+
+application-prod.properties:
+server.port=8080
+
+
+Using @Profile Annotation:
+You can specify beans to be loaded for specific profiles.
+
+Example:
+@Configuration
+@Profile("dev")
+public class DevConfig {
+    @Bean
+    public MyService devService() {
+        return new DevService();
+    }
+}
+
+@Configuration
+@Profile("prod")
+public class ProdConfig {
+    @Bean
+    public MyService prodService() {
+        return new ProdService();
+    }
+}
+
+
+
+
+
+Activating Profiles
+Set the active profile using:
+
+Environment Variables:
+export SPRING_PROFILES_ACTIVE=prod
+
+
+Command Line:
+java -jar myapp.jar --spring.profiles.active=prod
+
+
+
+
+4. Commonly Used Annotations for Profiles
+@Profile
+Defines beans for specific profiles.
+
+Example:
+@Component
+@Profile("dev")
+public class DevComponent { }
+
+
+
+
+@ConditionalOnProperty
+Loads a bean based on a property value.
+
+Example:
+@Configuration
+public class ConditionalConfig {
+    @Bean
+    @ConditionalOnProperty(name = "feature.enabled", havingValue = "true")
+    public MyFeature myFeature() {
+        return new MyFeature();
+    }
+}
+
+Quick Example: Spring Boot App with Profiles
+
+Application Structure
+
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+
+Profile-Specific Beans
+
+@Configuration
+@Profile("dev")
+public class DevConfig {
+    @Bean
+    public String devBean() {
+        return "Development Bean";
+    }
+}
+
+@Configuration
+@Profile("prod")
+public class ProdConfig {
+    @Bean
+    public String prodBean() {
+        return "Production Bean";
+    }
+}
+
+Controller
+
+@RestController
+public class MyController {
+    @Autowired
+    private String profileBean;
+
+    @GetMapping("/profile")
+    public String getProfileBean() {
+        return profileBean;
+    }
+}
