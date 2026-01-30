@@ -315,3 +315,69 @@ public class MyController {
         return profileBean;
     }
 }
+
+
+
+
+
+
+What is a REST API?
+
+
+A way for apps to talk to each other over the internet using HTTP (like GET, POST, PUT, DELETE).
+
+Think of it as a middleman between your app and the server.
+
+Data is sent and received in formats like JSON (most common) or XML.
+
+
+
+Key Parts of REST API Development
+
+
+Controllers: Handle requests (like "give me all users" or "delete this user").
+
+Services: The brain – where all the logic happens.
+
+Repositories: Talk to the database and fetch/store data.
+
+Models: The structure of your data (like a blueprint for "User" or "Product").
+
+
+
+How to Create REST APIs (Using Spring Boot)
+
+
+Set up a Spring Boot project (easy setup using Spring Initializr).
+
+Add dependencies for web, database, and JPA (for database interaction).
+
+Create:
+
+Model: Define your data structure (e.g., a User class).
+
+Repository: Connect to the database and fetch/store data.
+
+Service: Write the logic (like "get all users" or "add a new user").
+
+Controller: Create endpoints for clients to interact (e.g., /api/users).
+
+
+
+Run the app and test the APIs using Postman or curl.
+
+
+
+Key Annotations to Know
+
+
+@RestController: Makes a Java class work as an API.
+
+@GetMapping, @PostMapping: Handle GET and POST requests.
+
+@RequestBody: Maps incoming data (e.g., JSON) to your Java object.
+
+@PathVariable: Extracts values from the URL (e.g., /users/{id}).
+
+
+
